@@ -19,6 +19,7 @@ const char SOH = 0x01;
 const char STX = 0x02;
 const char ETX = 0x03;
 const char ENQ = 0x04;
+const char  LF = 0x10;
 
 
 //VGA Device
@@ -44,13 +45,22 @@ void loop()
     //read serial input
     char input = Serial.read();
 
-    if(input==0x00){
-      vga.setCursor(0,0);
-      vga.clear(0);
-    }else{
-      vga.print(input);
-    }
 
+    switch (input) {
+      case NUL:
+        vga.setCursor(0,0);
+        vga.clear(0);
+        break;
+      case SOH:
+        vga.print("Start of Heading");
+        break;
+      case LF:
+        vga.println("");
+        break;
+      default:
+        vga.print(input);
+        break;
+    }
 
 
     //Code for String inputs (Note: Very slow)
