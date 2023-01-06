@@ -2,26 +2,38 @@
  A New Beginning with a series of small microcontroller projects
 
 # ESP32 RISC GPU
-The ESP32 GPU receives data via UART and outputs it to a VGA Display via i2c 
+The ESP32 GPU receives data via UART and outputs VGA over I²S.
+
+### Installation
+
+This library only supports the ESP32.
+To install the ESP32 features in the board manager you need to add an additional Boards Manager URL in the Preferences (File -> Preferences)
+```
+https://dl.espressif.com/dl/package_esp32_index.json
+```
+The ESP32Lib can be found in the Library Manager (Sketch -> Include Library -> Manage Libaries)
+To be able to use the library featues the main header needs to included in the sketch
+```cpp
+#include <ESP32Lib.h>
+```
 
 ### Documentation
-<b> NOTE : This code only supports ESP32 </b>
 
 Custom Commands
 ~~~cpp
 //ASCII Char Values
-const char NUL = 0x00; //Clears the monitor and returns cursor to 0,0
+const char NUL = 0x80; //Clears the monitor and returns cursor to 0,0
 const char  LF = 0x10; //Newline
 ~~~
 
-UART Input Wiring
+UART Pin Configuration
 ~~~cpp
 const int RX = 1;
 const int TX = 3;
 ~~~
 
 
-3-Bit VGA Output Wiring
+3-Bit VGA Pin Configuration
 ~~~cpp
 const int redPin = 27;
 const int greenPin = 14;
