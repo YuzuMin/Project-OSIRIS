@@ -77,15 +77,14 @@ void loop()
 
     switch (input) {
       case RSFH:
-        //Clears Screen and Reset Cursor
-        vga.setCursor(0,0);
-        vga.clear(0);
+        vga.clear(0);       //Clears Screen
+        vga.setCursor(0,0); //Re Position Cursor to top left
         break;
       case SOH:
         vga.print("Start of Heading");
         break;
       case LF:
-        vga.println("");
+        vga.println("");  //Next Line
         break;
       default:
         vga.print(input);
