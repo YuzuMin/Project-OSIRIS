@@ -50,6 +50,15 @@ const char DEL = 0x7F;	//delete (rubout)
 
 //Custom Char Values
 const char RSFH = 0x80;	//Refresh
+const char GFX  = 0x81; //Graphics
+
+const char BUF0 = 0x82; //Buffer 0
+const char BUF1 = 0x83; //Buffer 1
+const char BUF2 = 0x84; //Buffer 2
+
+
+
+
 
 
 //VGA Device
@@ -57,12 +66,20 @@ VGA3Bit vga;
 
 void setup()
 {
-	//initializing vga at the specified pins
+  //vga.setFrameBufferCount(2);   //Double buffering for performance
+	
+  //initializing vga at the specified pins
 	vga.init(vga.MODE320x240, redPin, greenPin, bluePin, hsyncPin, vsyncPin);
 	//selecting the font
 	vga.setFont(Font6x8);
 	//displaying the text
-	vga.println("Hello World!");
+	vga.println("Monitor Check");
+  vga.println("ESP32 VGA GPU");
+  vga.println("ESP32 VGA GPU");
+  vga.println("ESP32 VGA GPU");
+  vga.println("ESP32 VGA GPU");
+  vga.println("ESP32 VGA GPU");
+  vga.println("ESP32 VGA GPU");
   vga.println("ESP32 VGA GPU");
   //initialize serial to get input data
   Serial.begin(921600);
