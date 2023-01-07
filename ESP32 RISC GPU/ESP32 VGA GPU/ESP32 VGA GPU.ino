@@ -80,6 +80,9 @@ void loop()
         vga.clear(0);       //Clears Screen
         vga.setCursor(0,0); //Re Position Cursor to top left
         break;
+      case NUL:
+        vga.print("Null");
+        break;
       case SOH:
         vga.print("Start of Heading");
         break;
