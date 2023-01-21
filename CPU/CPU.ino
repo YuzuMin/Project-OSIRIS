@@ -2,7 +2,19 @@ int wakeup = 22;
 int addressLatchEn = 23; //Active High
 int mask8bit[] = {1, 2, 4, 8, 16, 32, 64, 128};
 int mask16bit[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768};
-String  cpuClass = "Moby Dick / VIVY / UNICORN / NewTYPE Itanium" 
+
+//CPU Details
+String cpuSocket = "PGA3152"; // AM4 / LGA1151
+String cpuSeries = "NewTYPE Ampere"; // Raven Ridge
+String cpuSpeed = "133Mhz"; //
+String cpuClass = "A168"; // (A/B/H/Z LOW/Basic/High/Overclock) (168 = 16addr|8data) (+ for 2nd gen)
+String cpuArchitecture = "Nightingale"; //Multiplexed Address and Data Lines (E.g. Zen+)
+
+String cpuCore = "Arm Cortex M0+"; //Actual Processor
+String cpuInstructionSet = "Thumb-2"; //Actual Instruction Set
+
+
+
 
 // the setup function runs once when you press reset or power the board
 void setup() {
