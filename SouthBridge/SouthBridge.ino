@@ -1,93 +1,87 @@
+/*
+- Blue User LED: On GP25, available to user
+- RGB WS2812 LED: On GP23
+- USR Button : On GP24 (Connected to GND)
+*/
+
+#include <Adafruit_NeoPixel.h>
+#define BUTTON_PIN 24
+#define RELAY_PIN 25
+
+#define BUTTON_PIN   24  // Builtin USR Button
+#define PIXEL_PIN    23  // Digital IO pin connected to the NeoPixels.
+#define PIXEL_COUNT   1  // Number of NeoPixels
+Adafruit_NeoPixel strip(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
+
 int wakeup = 22;
-int addressLatchEn = 23; //Active High
 int mask8bit[] = {1, 2, 4, 8, 16, 32, 64, 128};
 int mask16bit[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768};
 
-//CPU Details
-String cpuSocket = "PGA3152"; // AM4 / LGA1151
-String cpuSeries = "NewTYPE Ampere"; // Raven Ridge
+//SouthBridge Controller Details
+String supportedSocket[] = {"PGA3152","PGB3152"}; //Pin Grid (Gen) A 31pin by 52pin (26pin DIP)
+String cpuSeries = "NewTYPE Ampere"; // NewTYPE (Due to complexities and bad planning) Ampere (Gen 1 Pilot) 
 String cpuSpeed = "133Mhz"; //
 String cpuClass = "A168"; // (A/B/H/Z LOW/Basic/High/Overclock) (168 = 16addr|8data) (+ for 2nd gen)
 String cpuArchitecture = "Nightingale"; //Multiplexed Address and Data Lines (E.g. Zen+)
 
-String cpuCore = "Arm Cortex M0+"; //Actual Processor
-String cpuInstructionSet = "Thumb-2"; //Actual Instruction Set
+//SouthBridge μP Details
+String southBridgeCore = "Arm Cortex M0+"; //Actual Processor
+String southBridgeInstructionSet = "Thumb-2"; //Actual Instruction Set
 
 
 
-
-// the setup function runs once when you press reset or power the board
-void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
+void setup1() {
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  strip.begin(); // Initialize NeoPixel strip object (REQUIRED)
+  strip.show();  // Initialize all pixels to 'off'
+  Serial.begin(9600);
 }
-
-// the loop function runs over and over again forever
-void loop() {
-  digitalWrite(LED_BUILTIN, LOW);  // turn the LED on (HIGH is the voltage level)
-  delay(1000);                      // wait for a second
-  addressOutput(170);
-  delay(1000);                      // wait for a second
+void loop1() {
+  RGBLED_rainbow(100);
 }
 
 
-void addressOutput(int addr){
-  pinMode(addressLatchEn, OUTPUT);  //Setup Address Latch pin as output
-
-  //Setup AD pins as output 
-  /*for(int i = 15; i>=0; i--){
-    pinMode(i,OUTPUT);
-  }*/
-
-  pinMode(1,OUTPUT);
-  pinMode(2,OUTPUT);
-  pinMode(3,OUTPUT);
-  pinMode(4,OUTPUT);
-  pinMode(5,OUTPUT);
-  pinMode(6,OUTPUT);
-  pinMode(7,OUTPUT);
-  pinMode(8,OUTPUT);
-
-  pinMode(9,OUTPUT);
-  pinMode(10,OUTPUT);
-  pinMode(11,OUTPUT);
-  pinMode(12,OUTPUT);
-  pinMode(13,OUTPUT);
-  pinMode(14,OUTPUT);
-  pinMode(15,OUTPUT);
-  pinMode(0,OUTPUT);
 
 
+void setup(void) {
 
-  digitalWrite(addressLatchEn, HIGH); //Enable Address Latch
+   pinMode(BUTTON_PIN, INPUT_PULLUP);
+   pinMode(RELAY_PIN,OUTPUT);
+   digitalWrite(RELAY_PIN,HIGH);
+}
 
-  //Output Address
-  /*
-  for(int i = 15; i>=0; i--){
-    if((addr&mask16bit[i])==mask16bit[i]){
-      digitalWrite(i, HIGH);
-    }else{
-      digitalWrite(i, LOW);
-    }
+void loop(void) {
+static byte toggle_sw_memmory=1;
+
+   // Check for keypress
+   if ( !digitalRead(BUTTON_PIN) ) {          // Pulled up so zero = pushed.
+
+      delay(100);
+
+      if ( !digitalRead(BUTTON_PIN) ) {       // if it is still pushed after a delay.
+         toggle_sw_memmory = !toggle_sw_memmory;
+
+         if (toggle_sw_memmory)
+            digitalWrite(RELAY_PIN,HIGH);
+         else
+            digitalWrite(RELAY_PIN,LOW);
+      }
+      while(!digitalRead(BUTTON_PIN)); // wait for low
+   }
+
+}
+
+
+
+void RGBLED_rainbow(int wait) {
+  for(long firstPixelHue = 0; firstPixelHue < 3*65536; firstPixelHue += 256) {
+    int pixelHue = firstPixelHue + (0 * 65536L / strip.numPixels());
+    strip.setPixelColor(0, (strip.gamma32(strip.ColorHSV(pixelHue,160,96))));
+    strip.show(); // Update strip with new contents
+    delay(wait);  // Pause for a moment
   }
-  */
-  digitalWrite(0, HIGH);
-  digitalWrite(1, HIGH);
-  digitalWrite(2, HIGH);
-  digitalWrite(3, HIGH);
-  digitalWrite(4, HIGH);
-  digitalWrite(5, HIGH);
-  digitalWrite(6, HIGH);
-  digitalWrite(7, HIGH);
-
-  digitalWrite(8, HIGH);
-  digitalWrite(9, HIGH);
-  digitalWrite(10, HIGH);
-  digitalWrite(11, HIGH);
-  digitalWrite(12, HIGH);
-  digitalWrite(13, HIGH);
-  digitalWrite(14, HIGH);
-  digitalWrite(15, HIGH);
-
-
 }
+
+
+
+
