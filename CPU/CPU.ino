@@ -98,7 +98,12 @@ void loop1() {
 void RGBLED_green() {
   strip.setPixelColor(0, (strip.gamma32(strip.Color(0,160,0))));  //Pass (Red , Green , Blue) thru gamma32 for better colours
   strip.show(); // Update strip with new contents
-  delay(1000);  // Pause for a moment
+  //delay(1000);  // Pause for a moment
+}
+
+void RGBLED_Color(uint8_t red=0, uint8_t green=0, uint8_t blue=0) {
+  strip.setPixelColor(0, (strip.gamma32(strip.Color(red,green,blue))));  //Pass (Red , Green , Blue) thru gamma32 for better colours
+  strip.show(); // Update strip with new contents
 }
 
 void RGBLED_rainbow(int wait) {
@@ -118,7 +123,6 @@ void addressOutput(int addr){
   //Setup AD pins as output 
   for(int i = 0; i<16; i++){
     pinMode(addressBus[i],OUTPUT);
-    Serial.println(addressBus[i]);
   }
 
   //Output Address
@@ -126,19 +130,18 @@ void addressOutput(int addr){
     Serial.print(addressBus[i]);
     if((addr&mask16bit[i])==mask16bit[i]){
       digitalWrite(addressBus[i], HIGH);
+      /*
       Serial.print("Mask: ");
       Serial.println(mask16bit[i]);
       Serial.print("Masked: ");
       Serial.println(addr&mask16bit[i]);
       Serial.print("Address: ");
       Serial.println(addr);
-      //Serial.print(1);
+      */
     }else{
       digitalWrite(addressBus[i], LOW);
-      //Serial.print(0);
     }
   }
-  Serial.println("");
 
 
   digitalWrite(ALE, LOW); //Disable Address Latch
