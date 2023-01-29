@@ -65,7 +65,7 @@ const char SEFT = 0x88; //Set Font
 const char SEBF = 0xFF; //Set Frame Buffer Count
 const char GFX  = 0xFF; //Graphics
 const char PRT  = 0xFF; //Print
-const char PRTL = 0xFF; //Print Line111
+const char PRTL = 0xFF; //Print Line
 
 //VGA Device
 VGA3Bit vga;
