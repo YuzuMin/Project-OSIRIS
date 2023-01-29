@@ -13,6 +13,7 @@ const int bluePin = 12;
 const int hsyncPin = 32;
 const int vsyncPin = 33;
 
+
 //ASCII Char Values
 const char NUL = 0x00;  //null
 const char SOH = 0x01;  //start of header
@@ -64,14 +65,19 @@ const char SEFT = 0x88; //Set Font
 const char SEBF = 0xFF; //Set Frame Buffer Count
 const char GFX  = 0xFF; //Graphics
 const char PRT  = 0xFF; //Print
-const char PRTL = 0xFF; //Print Line
-
-
-
-//NOTE: Use vga.RGB(0xFFFFFF) <-- Insert own hex code instead of direct values to avoid issues
+const char PRTL = 0xFF; //Print Line111
 
 //VGA Device
 VGA3Bit vga;
+
+const long RED    = vga.RGB(0x0000FF);
+const long GREEN  = vga.RGB(0x00FF00);
+const long BLUE   = vga.RGB(0xFF0000);
+const long PINK   = vga.RGB(0xFF00FF);
+const long YELLOW = vga.RGB(0x00FFFF);
+const long TEAL   = vga.RGB(0xFFFF00);
+const long BLACK  = vga.RGB(0x000000);
+const long WHITE  = vga.RGB(0xFFFFFF);
 
 void setup()
 {
@@ -81,52 +87,27 @@ void setup()
 	vga.init(vga.MODE320x240, redPin, greenPin, bluePin, hsyncPin, vsyncPin);
 	//selecting the font
 	vga.setFont(Font6x8);
+  vga.setTextColor(WHITE); 
 	//displaying the text
-  //vga.clear(vga.RGB(0xffffff)); //Clear screen buffer and set it to white
-	vga.print("Monitor Check :");
+  delay(2000);
+	vga.print("Monitor:");
   vga.println("ESP32 VGA GPU");
-  vga.clear(15);
-
-  vga.setTextColor(vga.RGB(0xFF0000),15);  //BLUE
-  delay(1000);
+  delay(600);
+  vga.print("Resolution:");
+  vga.println("320x240");
+  delay(600);
+  vga.print("Display Output:");
+  vga.println("VGA");
+  delay(600);
+  vga.clear(BLACK); //Clear screen buffer and set it to BLACK
+  vga.setCursor(0,0); //Re Position Cursor to top left
+  vga.setTextColor(WHITE);  
   vga.println("ESP32 VGA GPU");
-  vga.setTextColor(vga.RGB(0x00FF00));  //GREEN
-  vga.println("ESP32 VGA GPU");
-  vga.setTextColor(vga.RGB(0x0000FF));  //RED
-  vga.println("ESP32 VGA GPU");
-  vga.setTextColor(vga.RGB(0xFF00FF));  //Pink
-  vga.println("ESP32 VGA GPU");
-  vga.setTextColor(vga.RGB(0x00FFFF));  //Yellow
-  vga.println("ESP32 VGA GPU");
-  vga.setTextColor(vga.RGB(0xFFFF00));  //Teal
-  vga.println("ESP32 VGA GPU");
-  vga.setTextColor(vga.RGB(0x000000));  //Black
-  vga.println("ESP32 VGA GPU");         
-  vga.setTextColor(vga.RGB(0xFFFFFF),vga.RGB(0x000000));  //White
-  vga.println("ESP32 VGA GPU");
-
-
   //initialize serial to get input data
-  Serial.begin(921600);
+  Serial.begin(115200);
 
-  //vga.clear(9);
 
-  vga.setTextColor(9);  //RED
-  vga.println("HI");
-  vga.setTextColor(10);  //GREEN
-  vga.println("HI");
-  vga.setTextColor(11);  //YELLOW
-  vga.println("HI");
-  vga.setTextColor(12);  //BLUE
-  vga.println("HI");
-  vga.setTextColor(13);  //PINK
-  vga.println("HI");
-  vga.setTextColor(14);  //ICE BLUE
-  vga.println("HI");
-  vga.setTextColor(15,vga.RGB(0x000000));  //White
-  vga.println("HI");
-  vga.setTextColor(vga.RGB(0x000000),15);
-  vga.println("HI");
+
 }
 
 void loop()
