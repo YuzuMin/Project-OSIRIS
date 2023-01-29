@@ -1,4 +1,6 @@
 /*
+- IMPORTANT : Code is only compatible with RP2040 Based Microcontrollers
+
 - Blue User LED: On GP25, available to user
 - RGB WS2812 LED: On GP23
 - USR Button : On GP24 (Connected to GND)
@@ -37,6 +39,19 @@
 #define D6   7
 #define D7   6
 
+/// \tag::hello_uart[]
+
+#define UART_ID uart0
+#define BAUD_RATE 115200
+
+// We are using pins 0 and 1, but see the GPIO function select table in the
+// datasheet for information on which other pins can be used.
+#define UART_TX_PIN 0
+#define UART_RX_PIN 1
+
+//Express USART for GPU
+#define E_RX   17 //Express USART RX Pin
+#define E_TX   16 //Express USART TX Pin
 
 //Control Pins
 #define WAKE_UP  22 //Enable PC BOOT
@@ -69,14 +84,28 @@ String cpuInstructionSet = "Thumb-2"; //Actual Instruction Set
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
   //pinMode(LED_BUILTIN, OUTPUT);
-  Serial.begin(115200);
+
+  // Set up our UART with the required speed.
+  uart_init(UART_ID, BAUD_RATE);
+
+  // Set the TX and RX pins by using the function select on the GPIO
+  // Set datasheet for more information on function select
+  gpio_set_function(E_TX, GPIO_FUNC_UART);
+  gpio_set_function(E_RX, GPIO_FUNC_UART);
+
   addressOutput(43690);
+
+  pinMode(USER_BTN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(USER_BTN), GPU_OUT, FALLING);
 }
 
 // the loop function runs over and over again forever
 void loop() {
   delay(1000);                      // wait for a second
   //addressOutput(43690);
+  //Serial.write(0x0A);
+
+  //uart_puts(UART_ID, "Hello RaspBerry Pi Pico Loop\n");
 }
 
 /*
@@ -93,6 +122,11 @@ void loop1() {
   RGBLED_rainbow(100);
 }
 */
+void GPU_OUT() {
+  uart_puts(UART_ID, "Hello RaspBerry Pi Pico Interrupt\n");
+  //Serial.write(0x0A);
+  //Serial.println("Hello RaspBerry Pi Pico Interrupt");
+}
 
 
 void RGBLED_green() {
@@ -127,17 +161,8 @@ void addressOutput(int addr){
 
   //Output Address
   for(int i = 0; i<16; i++){
-    Serial.print(addressBus[i]);
     if((addr&mask16bit[i])==mask16bit[i]){
       digitalWrite(addressBus[i], HIGH);
-      /*
-      Serial.print("Mask: ");
-      Serial.println(mask16bit[i]);
-      Serial.print("Masked: ");
-      Serial.println(addr&mask16bit[i]);
-      Serial.print("Address: ");
-      Serial.println(addr);
-      */
     }else{
       digitalWrite(addressBus[i], LOW);
     }
